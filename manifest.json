@@ -1,0 +1,12 @@
+{
+    "name": "CSV Upload",
+    "description": "Upload a CSV file to create Trello cards.",
+    "author": "Your Name",
+    "version": "1.0",
+    "capabilities": {
+      "board-buttons": {
+        "url": "index.html",
+        "position": "top"
+      }
+    }
+  }
