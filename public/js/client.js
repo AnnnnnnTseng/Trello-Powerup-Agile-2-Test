@@ -5,7 +5,6 @@ var Promise = TrelloPowerUp.Promise;
 // this is a temp icon, it doesn't render currently
 var WHITE_ICON = 'https://cdn.hyperdev.com/us-east-1%3A3d31b21c-01a0-4da2-8827-4bc6e88b7618%2Ficon-white.svg';
 
-
 var boardButtonCallback = function (t) {
   return t.popup({
     title: 'App Functionalities',
@@ -14,7 +13,7 @@ var boardButtonCallback = function (t) {
         text: 'Import CSV',
         callback: function (t) {
           return t.modal({
-            url: './import-csv.html',
+            url: 'import-csv.html',
             accentColor: '#F2D600',
             height: 500,
             fullscreen: true,
@@ -33,8 +32,17 @@ TrelloPowerUp.initialize(
       return [
         {
           icon: WHITE_ICON,
-          text: 'SOME NAME',
-          callback: boardButtonCallback
+          text: 'Import CSV',
+          callback: function(t) {
+            return t.modal({
+              url: 'import-csv.html',
+              accentColor: '#F2D600',
+              height: 500,
+              fullscreen: true,
+              callback: () => console.log('Goodbye.'),
+              title: 'Import CSV',
+            })
+          }
         },
       ];
     },

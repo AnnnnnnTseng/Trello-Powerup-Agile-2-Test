@@ -1,5 +1,6 @@
 const t = window.TrelloPowerUp.iframe();
 
+// Operations after upload button is clicked
 document.getElementById("uploadButton").addEventListener("click", function () {
   alert("button clicked");
   const fileInput = document.getElementById("csvFileInput");
@@ -16,14 +17,16 @@ document.getElementById("uploadButton").addEventListener("click", function () {
   };
   reader.readAsText(file);
 });
-                                                         
+
 function parseCSV(csvContent) {
   alert("parsing CSV");
+
   const rows = csvContent.split("\n").map((row) => row.split(","));
   const headers = rows[0]; // Assuming the first row contains headers
   const data = rows.slice(1); // Data from subsequent rows
 
   // Log to see the parsed content
+  console.log("csvContent:", csvContent);
   console.log("Headers:", headers);
   console.log("Data:", data);
 

@@ -19,6 +19,9 @@
 
       var apiKey = t.arg('apiKey'); // Passed in as an argument to our iframe
 
+      console.log("Api key is:")
+      console.log(apiKey)
+
       var trelloAuthUrl = `https://trello.com/1/authorize?expiration=1hour&name=Example%20Trello%20Power-Up&scope=read&key=${apiKey}&callback_method=fragment&return_url=${window.location.origin}%2Fauth-success.html`;
       
       var tokenLooksValid = function(token) {
