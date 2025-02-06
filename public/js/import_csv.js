@@ -76,5 +76,6 @@ function createCardsFromCSVData(data) {
         })
         .catch(err => console.error("Error fetching lists:", err));
     });
+    alert("Finish creating cards! You can close the page now.");
   });
 }
