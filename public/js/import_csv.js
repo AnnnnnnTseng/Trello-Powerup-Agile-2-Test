@@ -34,37 +34,15 @@ function parseCSV(csvContent) {
   createCardsFromCSVData(data);
 }
 
-// function createCardsFromCSVData(data) {
-//   alert(`parsed data: ${data}`);
-//   data.forEach((row) => {
-//     const title = row[0];
-//     const description = row[1];
-
-//     t.set("card", "shared", "key", title).then((card) => {
-//       console.log("Created card:", card);
-//     }).catch((err) => {
-//       console.error("Error creating card:", err);
-//     });
-//   });
-// }
-
-
-
-
 // updated function for rendering cards
 function createCardsFromCSVData(data) {
-  alert(`parsed data: ${data}`);
-  // t.board() function take filed name as input, it takes time to get back result
-  // so use .then, which wait until result is filled and then execute
-  // .then is also a "callback function": A function passed into another function to run later.
+  console.log(`parsed data: ${data}`);
+
   t.board("id").then((board) => {
-    alert(`Got boardID: ${board.id}`);
-    console.log("board", board)
-    console.log("boardID", board.id)
+    console.log(`Got boardID: ${board.id}`);
     const boardId = board.id;
-    // each row of data looks like: Card1, description for card 1 
+    // Each row of data looks like: Card1, description for card 1 
     data.forEach((row) => {
-      alert(`parsed data: ${data}`);
       const title = row[0]?.trim();
       const description = row[1]?.trim();
 
@@ -75,18 +53,18 @@ function createCardsFromCSVData(data) {
       const apiToken = "";
 
       // Example: Get first list in the board to add the card to
-      alert(`Creating new card for: ${title}`);
+      console.log(`Creating new card for: ${title}`);
       fetch(`https://api.trello.com/1/boards/${boardId}/lists?key=${apiKey}&token=${apiToken}`) //This makes a request to Trello's API.
         .then(response => response.json()) //Converts the API response (which is JSON) into a JavaScript object.
         .then(lists => {
           if (lists.length === 0) {
-            alert("No lists found on the board!");
+            alert("No lists found on the board, please create a list then try again!");
             return;
           }
 
-          const listId = lists[0].id; // Got the first list to add to
+          const listId = lists[0].id; // Default add to the first list on the board
 
-          // The values of title and description are used in the URL when making the request
+          // Making create-card request using values of title and description 
           const url = `https://api.trello.com/1/cards?key=${apiKey}&token=${apiToken}&idList=${listId}&name=${encodeURIComponent(title)}&desc=${encodeURIComponent(description)}`;
 
           fetch(url, { method: "POST" }) // send POST request to create something (card)
