@@ -36,7 +36,7 @@ function parseCSV(csvContent) {
 
   //after data table displayed, create cards button stand by
   document.getElementById("createCardsButton").addEventListener("click", function () {
-    createCardsFromCSVData(parsedData);
+    createCardsFromCSVData(data);
   });
 
 }
