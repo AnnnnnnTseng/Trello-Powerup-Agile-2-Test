@@ -34,6 +34,11 @@ function parseCSV(csvContent) {
   // createCardsFromCSVData(data);
   displayParsedData(data)
 
+  //after data table displayed, create cards button stand by
+  document.getElementById("createCardsButton").addEventListener("click", function () {
+    createCardsFromCSVData(parsedData);
+  });
+
 }
 
 
@@ -74,52 +79,53 @@ function displayParsedData(data) {
   });
 
   container.appendChild(table);
-  alert("Table created");
+  document.getElementById("createCardsButton").style.display = "block";
+  alert("Table, Create-Card Button created");
 }
 
 
 // updated function for rendering cards
-// function createCardsFromCSVData(data) {
-//   console.log(`parsed data: ${data}`);
+function createCardsFromCSVData(data) {
+  console.log(`parsed data: ${data}`);
 
-//   t.board("id").then((board) => {
-//     console.log(`Got boardID: ${board.id}`);
-//     const boardId = board.id;
-//     // Each row of data looks like: Card1, description for card 1 
-//     data.forEach((row) => {
-//       const title = row[0]?.trim();
-//       const description = row[1]?.trim();
+  t.board("id").then((board) => {
+    console.log(`Got boardID: ${board.id}`);
+    const boardId = board.id;
+    // Each row of data looks like: Card1, description for card 1 
+    data.forEach((row) => {
+      const title = row[0]?.trim();
+      const description = row[1]?.trim();
 
-//       if (!title) return; // Skip empty rows
+      if (!title) return; // Skip empty rows
 
-//       // Replace with your Trello API credentials (store them securely)
-//       const apiKey = "";
-//       const apiToken = "";
+      // Replace with your Trello API credentials (store them securely)
+      const apiKey = "";
+      const apiToken = "";
 
-//       // Example: Get first list in the board to add the card to
-//       console.log(`Creating new card for: ${title}`);
-//       fetch(`https://api.trello.com/1/boards/${boardId}/lists?key=${apiKey}&token=${apiToken}`) //This makes a request to Trello's API.
-//         .then(response => response.json()) //Converts the API response (which is JSON) into a JavaScript object.
-//         .then(lists => {
-//           if (lists.length === 0) {
-//             alert("No lists found on the board, please create a list then try again!");
-//             return;
-//           }
+      // Example: Get first list in the board to add the card to
+      console.log(`Creating new card for: ${title}`);
+      fetch(`https://api.trello.com/1/boards/${boardId}/lists?key=${apiKey}&token=${apiToken}`) //This makes a request to Trello's API.
+        .then(response => response.json()) //Converts the API response (which is JSON) into a JavaScript object.
+        .then(lists => {
+          if (lists.length === 0) {
+            alert("No lists found on the board, please create a list then try again!");
+            return;
+          }
 
-//           const listId = lists[0].id; // Default add to the first list on the board
+          const listId = lists[0].id; // Default add to the first list on the board
 
-//           // Making create-card request using values of title and description 
-//           const url = `https://api.trello.com/1/cards?key=${apiKey}&token=${apiToken}&idList=${listId}&name=${encodeURIComponent(title)}&desc=${encodeURIComponent(description)}`;
+          // Making create-card request using values of title and description 
+          const url = `https://api.trello.com/1/cards?key=${apiKey}&token=${apiToken}&idList=${listId}&name=${encodeURIComponent(title)}&desc=${encodeURIComponent(description)}`;
 
-//           fetch(url, { method: "POST" }) // send POST request to create something (card)
-//             .then(response => response.json())
-//             .then(card => {
-//               console.log("Created card:", card);
-//             })
-//             .catch(err => console.error("Error creating card:", err));
-//         })
-//         .catch(err => console.error("Error fetching lists:", err));
-//     });
-//     alert("Finish creating cards! You can close the page now.");
-//   });
-// }
+          fetch(url, { method: "POST" }) // send POST request to create something (card)
+            .then(response => response.json())
+            .then(card => {
+              console.log("Created card:", card);
+            })
+            .catch(err => console.error("Error creating card:", err));
+        })
+        .catch(err => console.error("Error fetching lists:", err));
+    });
+    alert("Finish creating cards! You can close the page now.");
+  });
+}
