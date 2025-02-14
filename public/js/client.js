@@ -2,7 +2,7 @@
 
 var Promise = TrelloPowerUp.Promise;
 
-// this is a temp icon, it doesn't render currently
+// This is a temp icon, it doesn't render currently
 var WHITE_ICON = 'https://cdn.hyperdev.com/us-east-1%3A3d31b21c-01a0-4da2-8827-4bc6e88b7618%2Ficon-white.svg';
 
 var boardButtonCallback = function (t) {
@@ -26,6 +26,8 @@ var boardButtonCallback = function (t) {
   });
 };
 
+// This is the core part of the Power-Up where different features 
+// (buttons, badges, authorization) are registered.
 TrelloPowerUp.initialize(
   {
     'board-buttons': function (t, options) {
@@ -46,22 +48,45 @@ TrelloPowerUp.initialize(
         },
       ];
     },
-    'card-badges': function (t, options) {
-      return t.get('card', 'shared', 'estimate')
-      .then(function(estimate) {
+    "card-badges": function (t, options) {
+      return t.card('id', 'desc')
+      .then(function (card) {
+        // Extract estimate from description
+        const estimateMatch = card.desc.match(/\[(.*?)\]/);
+        const estimate = estimateMatch ? estimateMatch[1].toLowerCase() : 'N/A';
+
+
+        // Define color mapping based on estimate size
+        const estimateColors = {
+            "x-small": 'green',
+            "small": 'green',
+            "medium": 'orange',
+            "large": 'red',
+            "x-large": 'red'
+          };
+
         return [{
-          title: 'Estimate',
-          text: estimate || 'No Estimate!',
-          color: estimate ? null : 'red',
-          callback: function(t) {
-            return t.popup({
-              title: "Estimation",
-              url: 'estimate.html',
-            });
-          }
-        }]
+          text: `${estimate}`,
+          color: estimateColors[`${estimate}`] || 'blue'
+        }];
       });
     },
+    // 'card-badges': function (t, options) {
+    //   return t.get('card', 'shared', 'estimate')
+    //   .then(function(estimate) {
+    //     return [{
+    //       title: 'Estimate',
+    //       text: estimate || 'No Estimate!',
+    //       color: estimate ? null : 'red',
+    //       callback: function(t) {
+    //         return t.popup({
+    //           title: "Estimation",
+    //           url: 'estimate.html',
+    //         });
+    //       }
+    //     }]
+    //   });
+    // },
     'card-buttons': function(t, options){
       return [{
         text: 'Estimate Size',

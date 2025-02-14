@@ -2,7 +2,7 @@ const t = window.TrelloPowerUp.iframe();
 
 // Operations after upload button is clicked
 document.getElementById("uploadButton").addEventListener("click", function () {
-  alert("button clicked");
+  // alert("button clicked");
   const fileInput = document.getElementById("csvFileInput");
   const file = fileInput.files[0];
   if (!file) {
@@ -18,8 +18,21 @@ document.getElementById("uploadButton").addEventListener("click", function () {
   reader.readAsText(file);
 });
 
+function getSelectedSizes() {
+  const selectedData = [];
+  document.querySelectorAll(".estimateSize").forEach((select, index) => {
+      const row = select.closest("tr");
+      const title = row.cells[0].textContent;
+      const description = row.cells[1].textContent;
+      const selectedValue = select.value;
+      console.log(`------Row ${index + 1}: "${title}" selected size: ${selectedValue}`);
+      selectedData.push([title, description, selectedValue]);
+  });
+  return selectedData;
+}
+
 function parseCSV(csvContent) {
-  alert("parsing CSV");
+  // alert("parsing CSV");
 
   const rows = csvContent.split("\n").map((row) => row.split(","));
   const headers = rows[0]; // Assuming the first row contains headers
@@ -34,17 +47,26 @@ function parseCSV(csvContent) {
   // createCardsFromCSVData(data);
   displayParsedData(data)
 
+  // var dataWithSize;
+
   //after data table displayed, create cards button stand by
-  document.getElementById("createCardsButton").addEventListener("click", function () {
-    createCardsFromCSVData(data);
+  document.getElementById("createCardsButton").addEventListener("click", () => {
+    console.log("Hi!");
+    const dataWithSize = getSelectedSizes();
+    console.log("DataWithSize: ", dataWithSize);
+    createCardsFromCSVData(dataWithSize);
   });
+  
+  // document.getElementById("createCardsButton").addEventListener("click", function () {
+  //   createCardsFromCSVData(dataWithSize);
+  // });
 
 }
 
 
 
 function displayParsedData(data) {
-  alert("Start display data");
+  // alert("Start display data");
   const container = document.getElementById("parsedDataContainer");
   container.innerHTML = "";
   
@@ -95,13 +117,13 @@ function createCardsFromCSVData(data) {
     data.forEach((row) => {
       const title = row[0]?.trim();
       const description = row[1]?.trim();
+      const estimateSize = row[2]?.trim();
 
       if (!title) return; // Skip empty rows
 
       // Replace with your Trello API credentials (store them securely)
       const apiKey = "";
       const apiToken = "";
-
       // Example: Get first list in the board to add the card to
       console.log(`Creating new card for: ${title}`);
       fetch(`https://api.trello.com/1/boards/${boardId}/lists?key=${apiKey}&token=${apiToken}`) //This makes a request to Trello's API.
@@ -113,14 +135,15 @@ function createCardsFromCSVData(data) {
           }
 
           const listId = lists[0].id; // Default add to the first list on the board
-
+          const descriptionWithSize =  "[" + estimateSize + "] " + description
           // Making create-card request using values of title and description 
-          const url = `https://api.trello.com/1/cards?key=${apiKey}&token=${apiToken}&idList=${listId}&name=${encodeURIComponent(title)}&desc=${encodeURIComponent(description)}`;
+          const url = `https://api.trello.com/1/cards?key=${apiKey}&token=${apiToken}&idList=${listId}&name=${encodeURIComponent(title)}&desc=${encodeURIComponent(descriptionWithSize)}`;
 
           fetch(url, { method: "POST" }) // send POST request to create something (card)
             .then(response => response.json())
             .then(card => {
               console.log("Created card:", card);
+              // updateCustomField(apiKey, apiToken, card.id, "yourCustomFieldId", "Your Custom Value");
             })
             .catch(err => console.error("Error creating card:", err));
         })
